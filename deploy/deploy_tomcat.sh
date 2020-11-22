@@ -69,5 +69,6 @@ cd $TOMCAT_PATH/webapps/
 mv web.war ROOT.war
 
 ## 启动tomcat
-cd $TOMCAT_PATH/bin
-sh startup.sh
+#cd $TOMCAT_PATH/bin
+#sh startup.sh
+docker start tomcat
