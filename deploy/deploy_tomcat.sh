@@ -12,18 +12,28 @@
 export os_type=`uname`
 
 ## 停止tomcat的函数, 参数$1带入tomcat的路径$TOMCAT_PATH
+#killTomcat()
+#{
+#  pid=`ps -ef|grep $1|grep java|awk '{print $2}'`
+#  echo "tomcat Id list :$pid"
+#  if [ "$pid" = "" ]
+#  then
+#    echo "no tomcat pid alive"
+#  else
+#    kill -9 $pid
+#  fi
+#}
 killTomcat()
 {
-  pid=`ps -ef|grep $1|grep java|awk '{print $2}'`
-  echo "tomcat Id list :$pid"
-  if [ "$pid" = "" ]
+  tomcatName=`docker ps|grep tomcat|awk '{print $NF}'`
+  if [ "$tomcatName" = "tomcat" ]
   then
-    echo "no tomcat pid alive"
+    echo "tomcat Is alive"
+    docker stop tomcat
   else
-    kill -9 $pid
+    echo "no tomcat alive"
   fi
 }
-
 ## 配置数据库参数
 cd $PROJ_PATH/web/src/main/resources/config
 if [[ "${os_type}" == "Darwin" ]]; then
@@ -46,7 +56,8 @@ cd $PROJ_PATH/web
 mvn clean package spring-boot:repackage -Dmaven.test.skip=true -U
 
 ## 停止Tomcat
-killTomcat $TOMCAT_PATH
+#killTomcat $TOMCAT_PATH
+killTomcat
 
 ## 删除tomcat中原有的工程
 rm -f $TOMCAT_PATH/webapps/ROOT.war
